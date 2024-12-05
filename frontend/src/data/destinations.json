@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "image": "glampingBogor",
+    "one": "oneGlampingBogor",
+    "two": "twoGlampingBogor",
+    "title": "Forrester Glamping Co Bogor",
+    "location": "Jawa Barat",
+    "deskripsi": "Wisata alam yang menawarkan pengalaman berkemah dengan fasilitas mewah di tengah pemandangan hijau Bogor. Cocok untuk liburan santai dengan keluarga atau pasangan."
+  },
+  {
+    "id": 2,
+    "image": "candiPrambanan",
+    "one": "oneCandiPrambanan",
+    "two": "twoCandiPrambanan",
+    "title": "Candi Prambanan",
+    "location": "Yogyakarta",
+    "deskripsi": "Kompleks candi Hindu terbesar di Indonesia yang merupakan salah satu Situs Warisan Dunia UNESCO. Menampilkan arsitektur megah dan kisah epik Ramayana."
+  },
+  {
+    "id": 3,
+    "image": "pantaiMawun",
+    "one": "onePantaiMawun",
+    "two": "twoPantaiMawun",
+    "title": "Pantai Mawun",
+    "location": "Lombok Tengah",
+    "deskripsi": "Pantai yang tenang di Lombok dengan pasir putih lembut dan perairan biru jernih. Cocok untuk bersantai dan menikmati suasana pantai yang damai."
+  },
+  {
+    "id": 4,
+    "image": "rajaAmpat",
+    "one": "oneRajaAmpat",
+    "two": "twoRajaAmpat",
+    "title": "Kepulauan Raja Ampat",
+    "location": "Papua Barat Daya",
+    "deskripsi": "Surga bahari di Papua Barat yang terkenal dengan keindahan bawah lautnya. Ideal untuk snorkeling, menyelam, dan menikmati panorama pulau-pulau kecil dengan air jernih."
+  },
+  {
+    "id": 5,
+    "image": "bali",
+    "one": "oneBali",
+    "two": "twoBali",
+    "title": "Pulau Bali",
+    "location": "Bali",
+    "deskripsi": "Pulau eksotis yang terkenal dengan pantai-pantai indah, budaya yang kaya, pura-pura megah, dan kehidupan malam yang hidup. Destinasi favorit untuk wisatawan domestik maupun mancanegara."
+  },
+  {
+    "id": 6,
+    "image": "danauToba",
+    "one": "oneDanauToba",
+    "two": "twoDanauToba",
+    "title": "Danau Toba",
+    "location": "Sumatera Utara",
+    "deskripsi": "Danau vulkanik terbesar di Asia Tenggara yang terletak di Sumatera Utara. Memiliki Pulau Samosir di tengahnya, tempat budaya Batak yang kaya dapat dinikmati."
+  },
+  {
+    "id": 7,
+    "image": "pulauKomodo",
+    "one": "onePulauKomodo",
+    "two": "twoPulauKomodo",
+    "title": "Pulau Komodo",
+    "location": "Nusa Tenggara Timur",
+    "deskripsi": "Destinasi di Nusa Tenggara Timur yang merupakan rumah bagi Komodo, kadal terbesar di dunia. Juga dikenal dengan pantai-pantai indah dan pemandangan perbukitan yang menakjubkan."
+  },
+  {
+    "id": 8,
+    "image": "bromo",
+    "one": "oneBromo",
+    "two": "twoBromo",
+    "title": "Gunung Bromo",
+    "location": "Jawa Timur",
+    "deskripsi": "Gunung berapi aktif di Jawa Timur yang terkenal dengan pemandangan matahari terbit yang spektakuler, lautan pasir, dan kawahnya yang mengesankan."
+  },
+  {
+    "id": 9,
+    "image": "kawahIjen",
+    "one": "oneKawahIjen",
+    "two": "twoKawahIjen",
+    "title": "Kawah Ijen",
+    "location": "Jawa Timur",
+    "deskripsi": "Kawah di Banyuwangi, Jawa Timur, yang dikenal dengan fenomena api biru langka dan tambang belerang. Tempat ini menawarkan trekking menantang dengan pemandangan yang memukau."
+  },
+  {
+    "id": 10,
+    "image": "lombok",
+    "one": "oneLombok",
+    "two": "twoLombok",
+    "title": "Pulau Lombok",
+    "location": "Nusa Tenggara Barat",
+    "deskripsi": "Pulau tetangga Bali yang menawarkan pantai-pantai eksotis, Gunung Rinjani yang megah, dan Gili Islands yang menjadi surga bagi penyelam serta pecinta alam."
+  }
+]
