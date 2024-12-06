@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import {
   FaUser,
@@ -8,23 +9,20 @@ import {
   FaRegCalendarAlt,
 } from "react-icons/fa"; // Ikon
 import logo from "../assets/images/logo.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Fungsi toggle sidebar
   const [username, setUsername] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
       setUsername(storedUsername);
-    } else {
-      navigate("/login"); // Redirect to login if username is not found
     }
-  }, [navigate]);
+  });
 
   // Function to toggle sidebar
   const toggleSidebar = () => {
@@ -34,7 +32,7 @@ const Sidebar = () => {
   const handleLogout = () => {
     localStorage.removeItem("username");
     setUsername(""); // Clear the username from state
-    navigate("/login"); // Redirect to login page
+    // Redirect to login page
   };
 
   return (

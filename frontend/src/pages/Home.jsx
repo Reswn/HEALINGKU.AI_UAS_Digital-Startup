@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import DestinationCard from "../components/DestinationCard";
 import rekomendasi from "../assets/images/rekomendasi.png";
 import chatBot from "../assets/images/chatbot.png";
@@ -7,12 +8,10 @@ import map from "../assets/images/map.png";
 import { useState, useEffect } from "react";
 import { images } from "../data/images";
 import data from "../data/destinations.json";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [username, setUsername] = useState("");
-  const navigate = useNavigate();
 
   useEffect(() => {
     const loadDestinations = () => {
@@ -29,12 +28,9 @@ const Home = () => {
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
       setUsername(storedUsername);
-    } else {
-      navigate("/login"); // Redirect to login if username is not found
     }
-
     loadDestinations();
-  }, [navigate]);
+  });
 
   return (
     <div className="flex flex-col min-h-screen">
