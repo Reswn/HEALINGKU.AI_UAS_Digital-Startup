@@ -4,7 +4,8 @@ import data from "../data/destinations.json";
 import DestinationCard from "../components/DestinationCard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import { Link } from "react-router-dom";
+import axios from "axios";
 const Flanner = () => {
   const [tasks, setTasks] = useState([]);
   const [goals, setGoals] = useState([]);
@@ -15,76 +16,129 @@ const Flanner = () => {
     due: null,
   });
 
-  const [newGoal, setNewGoal] = useState({ title: "", progress: 0 });
-
+  const [newGoal, setNewGoal] = useState({ title: "" });
+  const [username, setUsername] = useState("");
+  const [userId, setUserId] = useState(null);
   useEffect(() => {
     const loadDestinations = () => {
-      const selectedIds = [1, 2, 5, 4];
+      const selectedIds = [1, 2];
       const loadedData = data
         .filter((item) => selectedIds.includes(item.id))
-        .map((item) => ({
-          ...item,
-          image: images[item.image],
-        }));
+        .map((item) => ({ ...item, image: images[item.image] }));
       setRecommendations(loadedData);
     };
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/tasks");
+        const formattedTasks = response.data.map((task) => ({
+          ...task,
+          due: task.due_date ? new Date(task.due_date) : null,
+        }));
+        setTasks(formattedTasks);
+        setTasks(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
     loadDestinations();
-  }, []);
 
+    const fetchGoals = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/goals");
+        setGoals(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching goals:", error);
+      }
+    };
+    fetchTasks();
+    fetchGoals();
+
+    const storedUsername = localStorage.getItem("username");
+    const storedUserId = localStorage.getItem("user_id");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+    if (storedUserId) {
+      setUserId(storedUserId);
+    }
+
+    const fetchUserId = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/users/${storedUsername}`
+        );
+        setUserId(response.data.id);
+      } catch (error) {
+        console.error("Error fetching user ID:", error);
+      }
+    };
+    fetchUserId();
+  }, []);
   // Functions for tasks
-  const handleAddTask = () => {
+  const handleAddTask = async () => {
     if (newTask.title.trim() !== "" && newTask.due) {
-      setTasks([...tasks, { ...newTask, id: tasks.length + 1 }]);
-      setNewTask({ title: "", priority: "Low", due: null });
+      try {
+        const response = await axios.post("http://localhost:3000/api/tasks", {
+          ...newTask,
+          due_date: newTask.due.toISOString().split("T")[0],
+          user_id: userId,
+        });
+        setTasks([...tasks, response.data]);
+        setNewTask({ title: "", priority: "Low", due: null });
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
     }
   };
 
-  const handleDeleteTask = (id) => {
-    const updatedTasks = tasks.filter((task) => task.id !== id);
-    setTasks(updatedTasks);
+  const handleDeleteTask = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/tasks/${id}`);
+      setTasks(tasks.filter((task) => task.id !== id));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
   };
 
   // Functions for goals
-  const handleAddGoal = () => {
-    if (
-      newGoal.title.trim() !== "" &&
-      newGoal.progress >= 0 &&
-      newGoal.progress <= 100
-    ) {
-      setGoals([...goals, { ...newGoal, id: goals.length + 1 }]);
-      setNewGoal({ title: "", progress: 0 });
+  const handleAddGoal = async () => {
+    if (newGoal.title.trim() !== "") {
+      try {
+        const response = await axios.post("http://localhost:3000/api/goals", {
+          ...newGoal,
+          user_id: userId,
+        });
+        setGoals([...goals, response.data]);
+        setNewGoal({ title: "" });
+      } catch (error) {
+        console.error("Error adding goal:", error);
+      }
+    }
+  };
+  const handleDeleteGoal = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/goals/${id}`);
+      setGoals(goals.filter((goal) => goal.id !== id));
+    } catch (error) {
+      console.error("Error deleting goal:", error);
     }
   };
 
-  const handleDeleteGoal = (id) => {
-    const updatedGoals = goals.filter((goal) => goal.id !== id);
-    setGoals(updatedGoals);
-  };
-
-  const handleUpdateGoal = (id, updatedGoal) => {
-    const updatedGoals = goals.map((goal) =>
-      goal.id === id ? updatedGoal : goal
-    );
-    setGoals(updatedGoals);
-  };
-
   return (
-    <div className="flex flex-col min-h-screen p-8 bg-gray-100 space-y-4">
+    <div className="flex flex-col min-h-screen p-8 bg-blue-100 space-y-4">
       {/* Greeting and Buttons */}
       <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold">
-          Hello Budi, How can I help you today?
+          Hello {username}, Bagaimana Rencana Liburan Kamu?
         </h1>
         <div className="space-x-4">
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            + Ask AI
-          </button>
-          <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-            Get tasks update
-          </button>
-          <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
-            Get tasks workspace
-          </button>
+          <Link to="/chatbot">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              + Tanya AI
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -93,12 +147,15 @@ const Flanner = () => {
         <div className="flex-1 bg-white rounded-lg shadow-md p-6">
           {/* My Tasks */}
           <section>
-            <h2 className="text-xl font-bold mb-4">My Tasks</h2>
+            {" "}
+            <h2 className="text-xl font-bold mb-4">Aktivitas LiburanKu</h2>{" "}
             <div className="space-y-4">
+              {" "}
               <div>
-                <h3 className="font-bold mb-2">IN PROGRESS</h3>
+                {" "}
+                <h3 className="font-bold mb-2">Dalam Rencana</h3>{" "}
                 {tasks.length === 0 ? (
-                  <p className="text-gray-500">No tasks in progress.</p>
+                  <p className="text-gray-500">Tidak ada aktivitas</p>
                 ) : (
                   tasks.map((task) => (
                     <div
@@ -116,10 +173,11 @@ const Flanner = () => {
                               : "text-gray-500"
                           }`}
                         >
-                          {" "}
                           Priority: {task.priority} - Due:{" "}
-                          {task.due ? task.due.toDateString() : "No due date"}{" "}
-                        </p>{" "}
+                          {task.due_date
+                            ? new Date(task.due_date).toLocaleDateString()
+                            : "No due date"}
+                        </p>
                       </div>{" "}
                       <div className="space-x-2">
                         {" "}
@@ -133,21 +191,23 @@ const Flanner = () => {
                       </div>{" "}
                     </div>
                   ))
-                )}
-              </div>
+                )}{" "}
+              </div>{" "}
               <div>
-                <h3 className="font-bold mb-2">Add Task</h3>
+                {" "}
+                <h3 className="font-bold mb-2">Tambah Aktivitas</h3>{" "}
                 <div className="p-4 bg-gray-100 rounded-lg">
-                  <h4 className="font-bold">To Do</h4>
+                  {" "}
+                  <h4 className="font-bold">Aktivitas</h4>{" "}
                   <input
                     type="text"
-                    placeholder="Task title"
+                    placeholder="nama aktivitas"
                     value={newTask.title}
                     onChange={(e) =>
                       setNewTask({ ...newTask, title: e.target.value })
                     }
                     className="block w-full p-2 mb-2 border rounded"
-                  />
+                  />{" "}
                   <select
                     value={newTask.priority}
                     onChange={(e) =>
@@ -155,32 +215,34 @@ const Flanner = () => {
                     }
                     className="block w-full p-2 mb-2 border rounded"
                   >
-                    <option value="Low">Low</option>
-                    <option value="High">High</option>
-                  </select>
+                    {" "}
+                    <option value="Low">Opsional</option>{" "}
+                    <option value="High">Prioritas</option>{" "}
+                  </select>{" "}
                   <DatePicker
                     selected={newTask.due}
                     onChange={(date) => setNewTask({ ...newTask, due: date })}
                     className="block w-full p-2 mb-2 border rounded"
-                    placeholderText="Select due date"
-                  />
+                    placeholderText="Pilih tanggal"
+                  />{" "}
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     onClick={handleAddTask}
                   >
-                    Add Task
-                  </button>
-                </div>
-              </div>
+                    {" "}
+                    Add Task{" "}
+                  </button>{" "}
+                </div>{" "}
+              </div>{" "}
             </div>
           </section>
 
           {/* My Goals */}
           <section className="mt-8">
-            <h2 className="text-xl font-bold mb-4">My Goals</h2>
+            <h2 className="text-xl font-bold mb-4">Tujuan LiburanKu</h2>
             <div className="space-y-4">
               {goals.length === 0 ? (
-                <p className="text-gray-500">No goals set.</p>
+                <p className="text-gray-500">Belum ada tempat tujuan</p>
               ) : (
                 goals.map((goal) => (
                   <div
@@ -189,62 +251,37 @@ const Flanner = () => {
                   >
                     <div>
                       <h4 className="font-bold mb-2">{goal.title}</h4>
-                      <div className="w-full bg-gray-200 rounded-full h-4">
-                        <div
-                          className="bg-blue-500 h-4 rounded-full"
-                          style={{ width: `${goal.progress}%` }}
-                        ></div>
-                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-4"></div>
                     </div>
                     <div className="space-x-2">
-                      <button
-                        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded"
-                        onClick={() =>
-                          handleUpdateGoal(goal.id, {
-                            ...goal,
-                            progress: goal.progress + 10,
-                          })
-                        }
-                      >
-                        Update
-                      </button>
                       <button
                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
                         onClick={() => handleDeleteGoal(goal.id)}
                       >
-                        Delete
+                        Hapus
                       </button>
                     </div>
                   </div>
                 ))
               )}
               <div>
-                <h3 className="font-bold mb-2">Add Goal</h3>
+                <h3 className="font-bold mb-2">Tambah Tujuan</h3>
                 <div className="p-4 bg-gray-100 rounded-lg">
-                  <h4 className="font-bold">New Goal</h4>
+                  <h4 className="font-bold">Tempat Tujuan Baru</h4>
                   <input
                     type="text"
-                    placeholder="Goal title"
                     value={newGoal.title}
                     onChange={(e) =>
                       setNewGoal({ ...newGoal, title: e.target.value })
                     }
-                    className="block w-full p-2 mb-2 border rounded"
-                  />
-                  <input
-                    type="number"
-                    placeholder="Progress (%)"
-                    value={newGoal.progress}
-                    onChange={(e) =>
-                      setNewGoal({ ...newGoal, progress: e.target.value })
-                    }
-                    className="block w-full p-2 mb-2 border rounded"
+                    placeholder="Add new goal"
+                    className="border p-2 rounded w-full"
                   />
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     onClick={handleAddGoal}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-4 rounded mt-2"
                   >
-                    Add Goal
+                    Tambah Tujuan
                   </button>
                 </div>
               </div>
@@ -252,8 +289,8 @@ const Flanner = () => {
           </section>
         </div>
 
-        <div className="w-full md:w-1/4 bg-gray-200 rounded-lg shadow-md p-4">
-          <h2 className="text-center font-bold mb-4">Calendar</h2>
+        <div className="w-full md:w-1/4 bg-blue-300 rounded-lg shadow-md p-4">
+          <h2 className="text-center font-bold mb-4">Kalender</h2>
           <div className="p-4 rounded-lg shadow mb-4 flex justify-center items-center">
             <DatePicker
               inline
@@ -262,9 +299,7 @@ const Flanner = () => {
               className="absolute left-2"
             />
           </div>
-          <h2 className="text-center font-bold mb-4">
-            Your History Destination
-          </h2>
+          <h2 className="text-center font-bold mb-4">Rekomendasi Destinasi</h2>
           <div className="space-y-2">
             {recommendations.map((item) => (
               <DestinationCard
@@ -281,5 +316,4 @@ const Flanner = () => {
     </div>
   );
 };
-
 export default Flanner;

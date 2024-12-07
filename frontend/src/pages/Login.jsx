@@ -86,11 +86,6 @@ const Login = () => {
             </Link>
           </div>
         </form>
-        <div className="mt-4 flex justify-center space-x-4 cursor-pointer">
-          <FaFacebook className="text-blue-600 text-2xl" />
-          <FaTwitter className="text-blue-400 text-2xl" />
-          <FaWhatsapp className="text-green-500 text-2xl" />
-        </div>
       </div>
 
       <div className="w-1/2 bg-blue-100 flex justify-center items-center">

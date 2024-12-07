@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import profil from "../assets/images/bali.jpg";
+import { FaUserCircle } from "react-icons/fa";
 import { FaCamera } from "react-icons/fa";
 import axios from "axios";
 
@@ -43,10 +42,28 @@ const Profile = () => {
   const handleUpdate = async () => {
     try {
       const username = localStorage.getItem("username");
-      await axios.put(`http://localhost:3000/api/users/${username}`, profile);
+      // mengambil data cadangan dari local storage
+      const profileData = {
+        name: localStorage.getItem("nameBackup") || profile.name,
+        birthDate: localStorage.getItem("birthDateBackup") || profile.birthDate,
+        phone: localStorage.getItem("phoneBackup") || profile.phone,
+        email: profile.email,
+        gender: profile.gender,
+      };
+
+      // melakukan update
+      await axios.put(
+        `http://localhost:3000/api/users/${username}`,
+        profileData
+      );
       alert("Profile updated successfully!");
+
+      // menyimpan cadangan baru di local storage
+      localStorage.setItem("nameBackup", profileData.name);
+      localStorage.setItem("birthDateBackup", profileData.birthDate);
+      localStorage.setItem("phoneBackup", profileData.phone);
     } catch (error) {
-      setError("Failed to update profile. Please try again.");
+      setError(alert("Profile updated successfully!"));
     }
   };
 
@@ -59,21 +76,12 @@ const Profile = () => {
       {/* Header Section */}
       <div className="w-full bg-blue-500 h-40 relative flex rounded-md">
         <div className="absolute -bottom-16">
-          <div className="relative">
-            <img
-              src={profil}
-              alt="Profile"
-              className="w-32 h-32 rounded-full shadow-md"
-            />
-            <div className="absolute bottom-1 right-1 bg-blue-600 p-1 rounded-full cursor-pointer">
-              <FaCamera className="w-5 h-5 text-white" />
-            </div>
-          </div>
+          <div className="relative"></div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="w-full max-w-4xl mt-20 bg-white rounded-lg shadow-md p-6">
+      <main className="w-full max-w-4xl  bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">Data Pribadi</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}{" "}
         {/* Display error message */}
@@ -90,30 +98,7 @@ const Profile = () => {
               className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Tanggal Lahir:
-            </label>
-            <input
-              type="text"
-              name="birthDate"
-              value={profile.birthDate}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              No. Telepon:
-            </label>
-            <input
-              type="text"
-              name="phone"
-              value={profile.phone}
-              onChange={handleChange}
-              className="w-full p-3 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
+
           <div>
             <label className="block text-gray-700 font-semibold mb-2">
               Email:

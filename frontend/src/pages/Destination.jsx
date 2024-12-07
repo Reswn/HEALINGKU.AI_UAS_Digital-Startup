@@ -25,7 +25,7 @@ const Destination = () => {
           Back
         </button>
       </Link>
-      <h2 className="text-2xl font-bold mb-6 text-center">Destinations</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">Destinasi Populer</h2>
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {recommendations.map((item) => (
           <DestinationCard
