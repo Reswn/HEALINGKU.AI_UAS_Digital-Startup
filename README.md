@@ -1,7 +1,18 @@
 # HEALINGKU.AI_UAS_Digital-Startup
 Healingku.AI adalah platform berbasis AI yang membantu pengguna merencanakan liburan mereka secara efektif. Fitur-fitur utama mencakup rekomendasi tempat wisata, pengelolaan aktivitas liburan melalui todo-list, serta estimasi dan tracking pengeluaran. Dengan menggunakan teknologi AI, platform ini memudahkan pengguna dalam merencanakan perjalanan mereka dan mengelola anggaran secara efisien.
 
-## Detail Proyek:
+## Proyek ini dibuat oleh:
+### KELOMPOK 5_IF-5A
+1. Reni Kartika Suwandi 220660121130
+2. Rani Siti Nabila 220660121034
+3. Melisa Sri Rahayu 220660121146
+4. Desi Siti Rahmawati 220660121099
+5. Lutfi Rahmat Lukmanul 220660121060
+6. Dede Ahmad Rosid 220660121028
+7. Muhamad Hilman F 220660121007
+8. Kemal Pramayuda 220660121041
+9. Samsul Prastio 220660121140
+10. Riva Ihsanul Amal	220660121175
 
 ### Fokus Utama: Pengembangan platform berbasis AI untuk perencanaan liburan yang mudah dan efisien.
 ### Fitur Utama:
