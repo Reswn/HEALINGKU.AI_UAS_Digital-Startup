@@ -3,6 +3,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import ReactMarkdown from "react-markdown";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import logo from "../assets/images/logo.png";
+import { FaUserCircle } from "react-icons/fa";
+import { FaRobot } from "react-icons/fa";
 
 const genAI = new GoogleGenerativeAI("AIzaSyCT_WZZS2lK4oJTSszeVxRk_cMiRmn_b5Q");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -16,7 +18,6 @@ const ChatBot = () => {
   const fetchBotResponse = async (userInput) => {
     try {
       const result = await model.generateContent(userInput);
-      console.log("API Response:", result);
       return result.response.text(); // Ensure proper access to the response
     } catch (error) {
       console.error("Error fetching API:", error);
@@ -58,39 +59,60 @@ const ChatBot = () => {
     <div className="flex h-full">
       {/* Bagian Tanya AI */}
       <div className="flex flex-col h-full p-4 bg-white rounded-lg shadow-md w-3/4 ml-2">
-        <div className="text-center font-bold text-2xl text-black">
+        <div className="text-center font-bold text-2xl text-blue-500">
           HEALINGKU.AI <img src={logo} className="inline-block h-8 w-8 ml-2" />
         </div>
-        <div className="text-center text-lg mb-6 text-black">
+        <div className="text-center text-lg mb-6 text-gray-600">
           Bagaimana rencana liburan kamu?
         </div>
         <div className="flex-1 overflow-y-auto mb-4">
           {messages.map((message) => (
             <div
               key={message.id}
-              className={`p-2 mb-2 rounded-lg ${
-                message.sender === "user"
-                  ? "bg-blue-300 text-right"
-                  : "bg-white self-start"
+              className={`p-2 mb-2 flex ${
+                message.sender === "user" ? "flex-row-reverse" : "flex-row"
               }`}
             >
-              <span
-                className={`text-${
-                  message.sender === "user" ? "blue-900" : "gray-700"
-                } ${message.sender === "user" ? "text-right" : "text-left"}`}
+              {/* Lingkaran Profil */}
+              {/* Lingkaran Profil */}
+              <div
+                className={`w-8 h-8 rounded-full overflow-hidden bg-gray-300 ${
+                  message.sender === "user" ? "ml-2" : "mr-2"
+                }`}
+              >
+                {message.sender === "user" ? (
+                  <FaUserCircle className="text-blue-500 text-6xl w-full h-full" />
+                ) : (
+                  <FaRobot className="text-blue-500 text-5xl w-full h-full" />
+                )}
+              </div>
+
+              {/* Pesan Chat */}
+              <div
+                className={`p-2 rounded-lg ${
+                  message.sender === "user"
+                    ? "bg-blue-300 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
               >
                 {message.sender === "bot" ? (
                   <ReactMarkdown>{message.text}</ReactMarkdown>
                 ) : (
                   message.text
                 )}
-              </span>
+              </div>
             </div>
           ))}
+
           {/* Animasi "Bot sedang mengetik" */}
           {isTyping && (
-            <div className="self-start p-2 mb-2 rounded-lg bg-gray-200">
-              <span className="text-gray-700 italic">sedang mengetik...</span>
+            <div className="flex items-center p-2 mb-2">
+              <div className="w-8 h-8 rounded-full bg-gray-300 mr-2">
+                <FaRobot className="text-blue-600 text-5xl w-full h-full" />
+              </div>
+              <div className="flex items-center rounded-lg bg-gray-200 p-2">
+                <span className="text-gray-700 italic">sedang mengetik...</span>
+              </div>
             </div>
           )}
         </div>
@@ -112,31 +134,21 @@ const ChatBot = () => {
         </div>
       </div>
       {/* Sidebar untuk riwayat chat */}
-      <div className="w-1/4 bg-blue-200 p-4 h-full border-r">
-        <h2 className="text-center font-bold text-xl text-black mb-4">
+      <div className="w-1/4 bg-blue-200 p-4 h-fullrounded-lg shadow-md border-r-2 ml-3">
+        <h2 className="text-center font-bold text-xl text-gray-700 mb-4">
           Riwayat Chat
         </h2>
         <div className="overflow-y-auto">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`p-2  rounded-lg ${
-                message.sender === "user" ? "bg-blue-400 self-end" : ""
-              }`}
-            >
-              <span
-                className={
-                  message.sender === "user" ? "text-blue-900" : "text-gray-700"
-                }
+          {messages
+            .filter((message) => message.sender === "user") // Filter hanya pesan dari pengguna
+            .map((message) => (
+              <div
+                key={message.id}
+                className="p-2 rounded-lg bg-blue-400 self-end mb-2" // Tampilan pesan pengguna
               >
-                {message.sender === "bot" ? (
-                  <ReactMarkdown></ReactMarkdown>
-                ) : (
-                  message.text
-                )}
-              </span>
-            </div>
-          ))}
+                <span className="text-blue-900 ">{message.text}</span>
+              </div>
+            ))}
         </div>
       </div>
     </div>
