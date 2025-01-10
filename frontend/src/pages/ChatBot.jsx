@@ -6,7 +6,7 @@ import logo from "../assets/images/logo.png";
 import { FaUserCircle } from "react-icons/fa";
 import { FaRobot } from "react-icons/fa";
 
-const genAI = new GoogleGenerativeAI("AIzaSyCT_WZZS2lK4oJTSszeVxRk_cMiRmn_b5Q");
+const genAI = new GoogleGenerativeAI(<Your_Google_API>);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const ChatBot = () => {
